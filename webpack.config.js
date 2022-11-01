@@ -1,4 +1,5 @@
 const path = require('path'); 
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
@@ -11,11 +12,14 @@ module.exports = (env) => {
   const isProduction = env === 'production';
 
   return { 
-    entry: ['./src/app.js'],
+    entry: path.resolve(__dirname,'src/app.js'),
+
     output: {
-      path: path.join(__dirname, 'public', 'dist'), 
-      filename: 'bundle.js'
+      filename: 'bundle.js',
+      path: path.resolve(__dirname,'dist'), 
+      clean: true
     },
+
     module: {
       rules: [
         {
@@ -26,13 +30,8 @@ module.exports = (env) => {
         {
         test: /\.s?css$/,
         use: [
-          isProduction?//use style loader in dev mode and minicssextract in production mode
-            {
-              loader: MiniCssExtractPlugin.loader,
-              options: {
-                sourceMap: true 
-              }
-            }:"style-loader",
+          isProduction ?//use style loader in dev mode and minicssextract in production mode
+            MiniCssExtractPlugin.loader:"style-loader",
             {
               loader: "css-loader",
               options: {
@@ -47,10 +46,19 @@ module.exports = (env) => {
             }
         ]
         }
+
       ]
     },
+    
+    devtool: isProduction ? 'source-map' : 'inline-source-map', 
+
     plugins: [
-      new MiniCssExtractPlugin({filename:"styles.css"}),
+      new HtmlWebpackPlugin({
+        title:"Boiler Plate",
+        filename:"index.html",
+        template:"src/template.html"
+      }),
+      new MiniCssExtractPlugin(),
       new webpack.DefinePlugin({
         'process.env.FIREBASE_API_KEY': JSON.stringify(process.env.FIREBASE_API_KEY),
         'process.env.FIREBASE_AUTH_DOMAIN': JSON.stringify(process.env.FIREBASE_AUTH_DOMAIN),
@@ -60,12 +68,11 @@ module.exports = (env) => {
         'process.env.FIREBASE_MESSAGING_SENDER_ID': JSON.stringify(process.env.FIREBASE_MESSAGING_SENDER_ID)
       })
     ],
-    devtool: isProduction ? 'source-map' : 'inline-source-map', 
     devServer: {
       static: {
-        directory: path.join(__dirname, 'public'),
+        directory:path.resolve(__dirname,'dist')
       },
-      historyApiFallback: true, 
+      historyApiFallback: true
     },
   };
 };
