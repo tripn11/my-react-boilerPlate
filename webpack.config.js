@@ -8,10 +8,10 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 require('dotenv').config();
 
 
-module.exports = (env) => { 
-  const isProduction = env === 'production';
+module.exports = (env,argv) => { 
+  const isProduction = argv.mode === 'production'; //argv.mode reads the mode whether in production or development
 
-  return { 
+  return {
     entry: path.resolve(__dirname,'src/app.js'),
 
     output: {
