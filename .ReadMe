@@ -1,6 +1,0 @@
-the .env.firebase file must be updated with the current values of the database created.
-had to download corejs and import at appjs to replace babel polyfills though its deprecated
-adviced to add npm i --save-dev @types/core-js for the core-js declaration
-installed old versions of firebase and react-dates since the latest ones refused to install
-the conditionals for webpack configuration are not really working well, in production mode, it isn't splitting the css into a new file.
-Alternatively i could create a seperate config file for dev and for prod or use webpack merge tool to create them after creating a webpack.common.js file 
